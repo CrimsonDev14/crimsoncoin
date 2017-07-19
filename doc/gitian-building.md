@@ -445,10 +445,10 @@ Then when building, override the remote URLs that gbuild would otherwise pull fr
 cd /some/root/path/
 git clone https://github.com/crimson-core/crimson-detached-sigs.git
 
-DGBPATH=/some/root/path/crimson
+CRMPATH=/some/root/path/crimson
 SIGPATH=/some/root/path/crimson-detached-sigs
 
-./bin/gbuild --url crimson=${DGBPATH},signature=${SIGPATH} ../crimson/contrib/gitian-descriptors/gitian-win-signer.yml
+./bin/gbuild --url crimson=${CRMPATH},signature=${SIGPATH} ../crimson/contrib/gitian-descriptors/gitian-win-signer.yml
 ```
 
 Signing externally
