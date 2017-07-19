@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=crimson Core
+Comment=Connect to the crimson P2P Network
+Comment[de]=Verbinde mit dem crimson peer-to-peer Netzwerk
+Comment[fr]=crimson, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=crimson, eşten eşe kriptografik sanal para birimi
+Exec=crimson-qt %u
+Terminal=false
+Type=Application
+Icon=crimson128
+MimeType=x-scheme-handler/crimson;
+Categories=Office;Finance;

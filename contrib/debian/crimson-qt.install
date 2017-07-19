@@ -1,0 +1,6 @@
+usr/local/bin/crimson-qt usr/bin
+share/pixmaps/crimson32.xpm usr/share/pixmaps
+share/pixmaps/crimson16.xpm usr/share/pixmaps
+share/pixmaps/crimson128.png usr/share/pixmaps
+debian/crimson-qt.desktop usr/share/applications
+debian/crimson-qt.protocol usr/share/kde4/services/

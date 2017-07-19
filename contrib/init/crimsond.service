@@ -1,0 +1,22 @@
+[Unit]
+Description=crimson's distributed currency daemon
+After=network.target
+
+[Service]
+User=crimson
+Group=crimson
+
+Type=forking
+PIDFile=/var/lib/crimsond/crimsond.pid
+ExecStart=/usr/bin/crimsond -daemon -pid=/var/lib/crimsond/crimsond.pid \
+-conf=/etc/crimson/crimson.conf -datadir=/var/lib/crimsond -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

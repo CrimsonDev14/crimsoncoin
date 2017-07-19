@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/crimson/.crimson" ]; then
+	crimsonD_DEFAULT_DATADIR="/var/lib/crimson/.crimson"
+else
+	crimsonD_DEFAULT_DATADIR="/var/lib/crimsond"
+fi
+
+crimsonD_CONFIGFILE=${crimsonD_CONFIGFILE:-/etc/crimson/crimson.conf}
+crimsonD_PIDDIR=${crimsonD_PIDDIR:-/var/run/crimsond}
+crimsonD_PIDFILE=${crimsonD_PIDFILE:-${crimsonD_PIDDIR}/crimsond.pid}
+crimsonD_DATADIR=${crimsonD_DATADIR:-${crimsonD_DEFAULT_DATADIR}}
+crimsonD_USER=${crimsonD_USER:-${crimson_USER:-crimson}}
+crimsonD_GROUP=${crimsonD_GROUP:-crimson}
+crimsonD_BIN=${crimsonD_BIN:-/usr/bin/crimsond}
+crimsonD_NICE=${crimsonD_NICE:-${NICELEVEL:-0}}
+crimsonD_OPTS="${crimsonD_OPTS:-${crimson_OPTS}}"
+
+name="crimson Core Daemon"
+description="crimson cryptocurrency P2P network daemon"
+
+command="/usr/bin/crimsond"
+command_args="-pid=\"${crimsonD_PIDFILE}\" \
+		-conf=\"${crimsonD_CONFIGFILE}\" \
+		-datadir=\"${crimsonD_DATADIR}\" \
+		-daemon \
+		${crimsonD_OPTS}"
+
+required_files="${crimsonD_CONFIGFILE}"
+start_stop_daemon_args="-u ${crimsonD_USER} \
+			-N ${crimsonD_NICE} -w 2000"
+pidfile="${crimsonD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${crimsonD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${crimsonD_USER}:${crimsonD_GROUP}" \
+	"${crimsonD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${crimsonD_USER}:${crimsonD_GROUP}" \
+	"${crimsonD_PIDDIR}"
+
+	checkpath -f \
+	-o ${crimsonD_USER}:${crimsonD_GROUP} \
+	-m 0660 \
+	${crimsonD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${crimsonD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run crimsond."
+		eerror "The setting must appear in ${crimsonD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"crimson Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

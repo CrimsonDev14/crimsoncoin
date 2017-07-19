@@ -1,0 +1,33 @@
+# /etc/conf.d/crimsond: config file for /etc/init.d/crimsond
+
+# Config file location
+#crimsonD_CONFIGFILE="/etc/crimson/crimson.conf"
+
+# What directory to write pidfile to?  (created and owned by $crimsonD_USER)
+#crimsonD_PIDDIR="/var/run/crimsond"
+
+# What filename to give the pidfile
+#crimsonD_PIDFILE="${crimsonD_PIDDIR}/crimsond.pid"
+
+# Where to write crimsond data (be mindful that the blockchain is large)
+#crimsonD_DATADIR="/var/lib/crimsond"
+
+# User and group to own crimsond process
+#crimsonD_USER="crimson"
+#crimsonD_GROUP="crimson"
+
+# Path to crimsond executable
+#crimsonD_BIN="/usr/bin/crimsond"
+
+# Nice value to run crimsond under
+#crimsonD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+crimsonD_OPTS="-disablewallet"
+
+# The timeout in seconds OpenRC will wait for crimsond to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+crimsonD_SIGTERM_TIMEOUT=60

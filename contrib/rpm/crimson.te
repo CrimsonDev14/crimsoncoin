@@ -1,0 +1,81 @@
+policy_module(crimson, 1.100.1)
+
+########################################
+#
+# Declarations
+#
+
+type crimson_t;
+type crimson_exec_t;
+init_daemon_domain(crimson_t, crimson_exec_t)
+
+permissive crimson_t;
+
+type crimson_initrc_exec_t;
+init_script_file(crimson_initrc_exec_t)
+
+type crimson_conf_t;
+files_type(crimson_conf_t)
+
+type crimson_var_lib_t;
+files_type(crimson_var_lib_t)
+
+type crimson_var_run_t;
+files_type(crimson_var_run_t)
+
+type crimson_port_t;
+corenet_port(crimson_port_t)
+
+########################################
+#
+# crimson local policy
+#
+allow crimson_t self:process { fork };
+
+allow crimson_t self:fifo_file rw_fifo_file_perms;
+allow crimson_t self:unix_stream_socket create_stream_socket_perms;
+
+manage_dirs_pattern(crimson_t, crimson_conf_t, crimson_conf_t)
+manage_files_pattern(crimson_t, crimson_conf_t, crimson_conf_t)
+
+manage_dirs_pattern(crimson_t, crimson_var_lib_t, crimson_var_lib_t)
+manage_files_pattern(crimson_t, crimson_var_lib_t, crimson_var_lib_t)
+files_var_lib_filetrans(crimson_t, crimson_var_lib_t, { dir file })
+
+manage_dirs_pattern(crimson_t, crimson_var_run_t, crimson_var_run_t)
+manage_files_pattern(crimson_t, crimson_var_run_t, crimson_var_run_t)
+
+sysnet_dns_name_resolve(crimson_t)
+corenet_all_recvfrom_unlabeled(crimson_t)
+
+allow crimson_t self:tcp_socket create_stream_socket_perms;
+corenet_tcp_sendrecv_generic_if(crimson_t)
+corenet_tcp_sendrecv_generic_node(crimson_t)
+corenet_tcp_sendrecv_all_ports(crimson_t)
+corenet_tcp_bind_generic_node(crimson_t)
+
+gen_require(`
+    type crimson_port_t;
+')
+allow crimson_t crimson_port_t:tcp_socket name_bind;
+
+gen_require(`
+    type crimson_port_t;
+')
+allow crimson_t crimson_port_t:tcp_socket name_connect;
+
+domain_use_interactive_fds(crimson_t)
+
+files_read_etc_files(crimson_t)
+
+miscfiles_read_localization(crimson_t)
+
+sysnet_dns_name_resolve(crimson_t)
+
+allow crimson_t crimson_exec_t:file execute_no_trans;
+allow crimson_t self:process setsched;
+corecmd_exec_ls(crimson_t)
+corenet_tcp_connect_http_port(crimson_t)
+dev_read_urand(crimson_t)
+fs_getattr_xattr_fs(crimson_t)
+kernel_read_system_state(crimson_t)
