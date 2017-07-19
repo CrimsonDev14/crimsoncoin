@@ -71,7 +71,7 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        //consensus.nSubsidyHalvingInterval = 210000; - DGB
+        //consensus.nSubsidyHalvingInterval = 210000; - CRM
         // consensus.BIP34Height = 145000;
         // consensus.BIP34Hash = uint256S("0xf8d650dda836d5e3809b928b8523f050891c3bb9fa2c201bb04824a8a2fe7df6");
         // consensus.BIP65Height = 145000; // 000000000000000004c2b624ed5d7756c508d90fd0da2c7c679febfa6c4735f0
@@ -103,9 +103,9 @@ public:
         consensus.nInterval = consensus.nTargetTimespan / consensus.nTargetSpacing;
         consensus.nDiffChangeTarget = 67200; // DigiShield Hard Fork Block BIP34Height 67,200
 
-        // Old 1% monthly DGB Reward before 15 secon block change
+        // Old 1% monthly CRM Reward before 15 secon block change
         consensus.patchBlockRewardDuration = 10080; //10080; - No longer used
-        //4 blocks per min, x60 minutes x 24hours x 14 days = 80,160 blocks for 0.5% reduction in DGB reward supply - No longer used
+        //4 blocks per min, x60 minutes x 24hours x 14 days = 80,160 blocks for 0.5% reduction in CRM reward supply - No longer used
         consensus.patchBlockRewardDuration2 = 80160; //80160;
         consensus.nTargetTimespanRe = 1*60; // 60 Seconds
         consensus.nTargetSpacingRe = 1*60; // 60 seconds

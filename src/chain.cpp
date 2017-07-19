@@ -176,7 +176,7 @@ arith_uint256 GetBlockProof(const CBlockIndex& block)
 }
 
 
-// DGB 6.14.1 GetBlock Proof
+// CRM 6.14.1 GetBlock Proof
 /** arith_uint256 GetBlockProof(const CBlockIndex& block)
 {
     CBlockHeader header = block.GetBlockHeader();
